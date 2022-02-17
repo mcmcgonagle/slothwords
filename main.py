@@ -8,13 +8,13 @@ turbo = Turbo(app)
 
 app.secret_key = '5#y2LF4Q8zxec'
 
-guesses = []
-tiles = ['     ', '     ', '     ', '     ','     ', '     ']
 
 
 @app.before_first_request
 def start_game():
     session["my_game"] = game.start_game()
+    session["guesses"] = []
+    session["tiles"] = ['     ', '     ', '     ', '     ','     ', '     ']
     return session["my_game"]
 
 #home page
@@ -28,7 +28,7 @@ def index():
     yellow_letters = []
     if request.method == 'POST':
         guess = request.form['guess']
-        answer = game.check_guess(guess, session['my_game'], len(guesses))
+        answer = game.check_guess(guess, session['my_game'], len(session["guesses"]))
         print("guess: ", guess)
         print("answer: ", answer)
         for index, value in enumerate(guess):
@@ -63,8 +63,14 @@ def index():
                 turbo.append(
                     render_template('_win.html'), target='guesses'),        
             ])
-        guesses.append(guess)
-        tiles.pop(len(tiles)-1)
+        elif answer == 'lose':
+              return turbo.stream([
+                turbo.append(
+                    render_template('_lose.html'), target='guesses'),        
+            ])          
+        session["guesses"].append(guess)
+        session["tiles"].pop((len(session["tiles"])-1))
+        session.modified = True
         if turbo.can_stream():
             return turbo.stream([
                 turbo.append(
@@ -72,15 +78,15 @@ def index():
                 turbo.update(
                     render_template('_guess_input.html'), target='form'),
                 turbo.update(
-                    render_template('_tiles.html', tiles=tiles), target='tiles')
+                    render_template('_tiles.html', tiles=session["tiles"]), target='tiles')
             ])
         green_letters.clear() 
         yellow_letters.clear()
-    return render_template('index.html', guesses=guesses,green_letters=green_letters,yellow_letters=yellow_letters,tiles=tiles)
+    return render_template('index.html', guesses=session["guesses"],green_letters=green_letters,yellow_letters=yellow_letters,tiles=session["tiles"])
 
 @app.route('/reset', methods=['GET'])
 def reset():
-    green_letters = []
-    yellow_letters = []
     session["my_game"] = None
+    session["guesses"] = []
+    session["tiles"] = ['     ', '     ', '     ', '     ','     ', '     ']
     return redirect(url_for('index'))

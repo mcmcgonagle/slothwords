@@ -8,14 +8,14 @@ def check_guess(x, challenge_word, guesses):
     win = False
     print(x)
     print(challenge_word)
-    if win == False and guesses >= 6:
-        print('You lose!')
-        print('The word was ' + challenge_word)
-        return "lose"
     if x == challenge_word:
         win = True
         print("You win!")
         return "win"
+    if win == False and guesses >= 5:
+        print('You lose!')
+        print('The word was ' + challenge_word)
+        return "lose"
     else: 
         print('Wrong!')
         my_word = list(x)
