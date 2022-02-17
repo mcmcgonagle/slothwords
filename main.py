@@ -10,7 +10,7 @@ app.secret_key = '5#y2LF4Q8zxec'
 
 
 
-@app.before_first_request
+
 def start_game():
     session["my_game"] = game.start_game()
     session["guesses"] = []
@@ -21,7 +21,10 @@ def start_game():
 @app.route('/',methods=['GET','POST'])
 def index():
     print(session)
-    if session['my_game'] == None:
+    try:
+        if session['my_game'] == None:
+            start_game()
+    except:
         start_game()
     print(session)
     green_letters = []
