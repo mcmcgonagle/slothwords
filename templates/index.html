@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+html,body {
+  height: 100vh;
+}
+    </style>
+    {{ turbo() }}
+  </head>
+  <body class="has-background-grey">
+    <br>
+  <turbo-frame id="guesses">
+
+      {% for guess in guesses %}
+          {% include '_guesses.html' %}
+      {% endfor %}
+
+  </turbo-frame>
+
+  <turbo-frame id="tiles">
+  
+      {% include '_tiles.html' %}
+    
+  </turbo-frame>
+<br>
+<br>
+<br>
+
+         <div class="column is-flex is-justify-content-center">
+
+    <div class="box guesswordapp">
+      <turbo-frame id="all">
+        <form method="POST" id="form">
+          {% include '_guess_input.html' %}
+        </form>
+      </turbo-frame>
+    </div>
+
+</div>
+
+
+  </body>
+</html>

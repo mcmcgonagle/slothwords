@@ -1,0 +1,11 @@
+{% for tile in tiles %}
+<div class ="columns is-centered">
+    {% for item in tile %}
+    <div class="column is-narrow">
+      <div class="tile box">
+        {{ item }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
